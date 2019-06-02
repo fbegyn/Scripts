@@ -45,27 +45,40 @@ do
   fi
 done <<< "$DEVICES"
 
-if [ ! -z "$DP4" ]
+# X11 part of the script
+if [ ! -z "$DP5" ] || [ ! -z "$DP3" ]
 then
   echo "DP1-1 plugged in"
 	wait_for_monitor DP1-1
-  xrandr --output DP1-1 --auto --above eDP1
-  xrandr --output eDP1 --off
-elif [ ! -z "$DP3" ]
-then
-  echo "DP1-1 plugged in"
-	wait_for_monitor DP1-1
-  xrandr --output DP1-1 --auto --above eDP1
-  xrandr --output eDP1 --off
+  xrandr --output DP1-1 --auto --primary --output eDP1 --off
 elif [ ! -z "$DP1" ]
 then
   echo "DP1 plugged in"
 	wait_for_monitor DP1
-  xrandr --output DP1 --auto --primary --right-of eDP1
-  xrandr --output eDP1 --off
+  xrandr --output DP1 --auto --primary --output eDP1 --off
 else
   echo "No external monitors are plugged in"
   xrandr --output eDP1 --auto --primary
   xrandr --output DP1-1 --off
   xrandr --output DP1 --off
 fi
+echo "awesome.restart()" | awesome-client
+# Wayland sway part of the script
+#if [ ! -z "$DP5" ] || [ ! -z "$DP3" ] || [ ! -z "$DP4" ]
+#then
+#  echo "DP1-1 plugged in"
+#  swaymsg output DP-3 enable
+#  swaymsg output DP-4 enable
+#  swaymsg output DP-5 enable
+#  swaymsg output eDP-1 disable
+#elif [ ! -z "$DP1" ]
+#then
+#  echo "DP1 plugged in"
+#  swaymsg output DP-3 enable
+#  swaymsg output eDP-1 disable
+#else
+#  echo "No external monitors are plugged in"
+#  swaymsg output DP-3 disable
+#  swaymsg output DP-5 disable
+#  swaymsg output eDP-1 enable
+#fi
