@@ -18,19 +18,19 @@
 change_percent=180
 
 # Don't start a new transition if the previous one isn't done yet
-pgrep -u $UID -x xbacklight >/dev/null && exit
+pgrep -u $UID -x brightnessctl >/dev/null && exit
 
 # Calculate new target brightness
-curr_brightness=$(xbacklight -get)
+curr_brightness=$(brightnessctl g)
 current_brightness=$(echo $curr_brightness | sed 's/[,.]000000//g')
 case $1 in
     up)
         target=$((current_brightness * $change_percent / 100))
-        [ $target -ne $current_brightness ] || target=$((target + 1))
+        [[ $target -ne $current_brightness ]] || target=$((target + 1))
         ;;
     down)
         target=$((current_brightness * 100 / $change_percent))
-        [ $target -ne $current_brightness ] || target=$((target - 1))
+        [[ $target -ne $current_brightness ]] || target=$((target - 1))
         ;;
 esac
 
@@ -39,4 +39,4 @@ esac
 [ $target -ge 100 ] && target=100
 
 # Smoothly set the new brightness
-xbacklight -time 5 -set $target
+brightnessctl -s $target
