@@ -1,24 +1,25 @@
 #! /bin/sh
 # Netperfrunner.sh - a shell script that runs several netperf commands simultaneously.
-# This mimics the stress test of netperf-wrapper from Toke <toke@toke.dk>
-# but doesn't have the nice GUI result. This can live in /usr/lib/sqm within CeroWrt
-#
+# This mimics the stress test of Flent (www.flent.org - formerly, "netperf-wrapper") 
+# from Toke <toke@toke.dk> but doesn't have the nice GUI result. 
+# This can live in /usr/lib/OpenWrtScripts
+# 
 # When you start this script, it concurrently uploads and downloads multiple
-# streams (files) to a server on the Internet. This places a heavy load
-# on the bottleneck link of your network (probably your connection to the
+# streams (files) to a server on the Internet. This places a heavy load 
+# on the bottleneck link of your network (probably your connection to the 
 # Internet). It also starts a ping to a well-connected host. It displays:
 #
-# a) total bandwidth available
+# a) total bandwidth available 
 # b) the distribution of ping latency
-
+ 
 # Usage: sh netperfrunner.sh [ -4 -6 ] [ -H netperf-server ] [ -t duration ] [ -t host-to-ping ] [ -n simultaneous-streams ]
 
 # Options: If options are present:
 #
 # -H | --host:   DNS or Address of a netperf server (default - netperf.bufferbloat.net)
-#                Alternate servers are netperf-east (east coast US), netperf-west (California),
+#                Alternate servers are netperf-east (east coast US), netperf-west (California), 
 #                and netperf-eu (Denmark)
-# -4 | -6:       IPv4 or IPv6
+# -4 | -6:       IPv4 or IPv6 
 # -t | --time:   Duration for how long each direction's test should run - (default - 60 seconds)
 # -p | --ping:   Host to ping to measure latency (default - gstatic.com)
 # -n | --number: Number of simultaneous sessions (default - 5 sessions)
@@ -29,11 +30,11 @@
 # Summarize the contents of the ping's output file to show min, avg, median, max, etc.
 # 	input parameter ($1) file contains the output of the ping command
 
-summarize_pings() {
-
+summarize_pings() {			
+	
 	# Process the ping times, and summarize the results
 	# grep to keep lines that have "time=", then sed to isolate the time stamps, and sort them
-	# awk builds an array of those values, and prints first & last (which are min, max)
+	# awk builds an array of those values, and prints first & last (which are min, max) 
 	#	and computes average.
 	# If the number of samples is >= 10, also computes median, and 10th and 90th percentile readings
 	sed 's/^.*time=\([^ ]*\) ms/\1/' < $1 | grep -v "PING" | sort -n | \
@@ -84,7 +85,7 @@ PINGFILE=`mktemp /tmp/measurepings.XXXXXX` || exit 1
 # read the options
 
 # extract options and their arguments into variables.
-while [ $# -gt 0 ]
+while [ $# -gt 0 ] 
 do
     case "$1" in
 	    -4|-6) TESTPROTO=$1; shift 1 ;;
@@ -93,7 +94,7 @@ do
                 "") echo "Missing hostname" ; exit 1 ;;
                 *) TESTHOST=$2 ; shift 2 ;;
             esac ;;
-        -t|--time)
+        -t|--time) 
         	case "$2" in
         		"") echo "Missing duration" ; exit 1 ;;
                 *) TESTDUR=$2 ; shift 2 ;;
@@ -109,7 +110,7 @@ do
         		*) MAXSESSIONS=$2 ; shift 2 ;;
         	esac ;;
         --) shift ; break ;;
-        *) echo "Usage: sh Netperfrunner.sh [-4 -6] [ -H netperf-server ] [ -t duration ] [ -p host-to-ping ] [ -n simultaneous-streams ]" ; exit 1 ;;
+        *) echo "Usage: sh Netperfrunner.sh [ -H netperf-server ] [ -t duration ] [ -p host-to-ping ] [ -n simultaneous-streams ]" ; exit 1 ;;
     esac
 done
 
@@ -131,7 +132,7 @@ echo "$DATE Testing $TESTHOST ($PROTO) with $MAXSESSIONS streams down and up whi
 # Start Ping
 if [ $TESTPROTO -eq "-4" ]
 then
-	ping  $PINGHOST > $PINGFILE &
+	ping $PINGHOST > $PINGFILE &
 else
 	ping6 $PINGHOST > $PINGFILE &
 fi
@@ -153,7 +154,7 @@ do
 	# echo "Starting download #$i $!"
 done
 
-# Wait until each of the background netperf processes completes
+# Wait until each of the background netperf processes completes 
 # echo "Process is $$"
 # echo `pgrep -P $$ netperf `
 
