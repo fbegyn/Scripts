@@ -1,0 +1,26 @@
+ls /sys/firmware/efi/efivars
+ip l
+timedatectl set-ntp true
+
+<partitioning>
+
+cryptsetup luksFormat /dev/sda1
+
+vgcreate MyVolGroup /dev/mapper/cryptlvm
+lvcreate -L 8G MyVolGroup -n swap
+lvcreate -L 32G MyVolGroup -n root
+lvcreate -l 100%FREE MyVolGroup -n home
+mkfs.ext4 /dev/MyVolGroup/root
+mkfs.ext4 /dev/MyVolGroup/home
+mkswap /dev/MyVolGroup/swap
+
+<format>
+mkfs.ext4
+mkfs.vfat -F32
+mkswap
+
+mount /mnt ....
+pacstrap /mnt base neovim git i3 networkmanager
+
+genfstab -U /mnt >> /mnt/etc/fstap
+arch-chroot /mnt
