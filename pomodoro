@@ -3,18 +3,18 @@
 case $1 in
   "start")
     i3-gnome-pomodoro start
-    sudo /home/francis/Scripts/focus study
+    /home/francis/Scripts/hosts-manager study
     ;;
   "stop")
     i3-gnome-pomodoro stop
-    sudo /home/francis/Scripts/focus
+    /home/francis/Scripts/hosts-manager normal
     ;;
   "pause")
     i3-gnome-pomodoro pause
-    sudo /home/francis/Scripts/focus
+    /home/francis/Scripts/hosts-manager normal
     ;;
   "resume")
     i3-gnome-pomodoro resume
-    sudo /home/francis/Scripts/focus study
+    /home/francis/Scripts/hosts-manager study
     ;;
 esac

@@ -6,7 +6,7 @@ fi
 
 THIS_MONTH=`date +%m`
 
-hledger bal -M ^Expenses --cumulative --no-total | sed 's/¥/ /g; 1,2d; 4d; $d; 3s/ /x/2; s/ //1; s/||//g' > ledgeroutput1.tmp
+hledger bal -M not:Correctie ^Expenses --cumulative --no-total | sed 's/¥/ /g; 1,2d; 4d; $d; 3s/ /x/2; s/ //1; s/||//g' > ledgeroutput1.tmp
 
 (cat <<EOF) | gnuplot
   set terminal $LEDGER_TERM
