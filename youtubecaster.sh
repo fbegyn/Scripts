@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 QUEUEFILE=$HOME/Videos/.castinput
 if [[ ! -p $QUEUEFILE ]]; then
     mkfifo $QUEUEFILE

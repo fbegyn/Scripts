@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 case "$2" in
   CONNECTED)
     SSID=$(wpa_cli -i wlp58s0 list_networks | rg CURRENT | cut -f 2)
